@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+
+  # Client
+  nginx:
+    build:
+      context: ./src/client/docker
+      dockerfile: nginx/nginx.docker
+    volumes:
+      - ./src/client:/var/www
+    depends_on:
+      - php-fpm
+    ports:
+      - "80:80"
+
+  php-fpm:
+    build:
+      context: ./src/client/docker
+      dockerfile: php/fpm.docker
+    volumes:
+      - ./src/client:/var/www
+
+  php-cli:
+    build:
+      context: ./src/client/docker
+      dockerfile: php/cli.docker
+    volumes:
+      - ./src/client:/var/www
+      - composer:/root/.composer/cache
+
+  # Server
+  websocket:
+    build:
+      context: ./src/server/docker
+      dockerfile: node.docker
+    volumes:
+      - ./src/server:/opt/websocket
+    command: "npm run start-wss"
+    networks:
+      socket:
+        ipv4_address: 172.27.0.5
+
+volumes:
+  composer:
+
+networks:
+  socket:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.27.0.0/16
+          gateway: 172.27.0.1
