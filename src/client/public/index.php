@@ -8,11 +8,6 @@
 <h1>Communication with socket.io!</h1>
 <!-- Load the Socket.io networking library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.0/socket.io.js"></script>
-<script>
-    const ws = io("ws://172.27.0.5:8080");
-    ws.on('connect', function (data) {
-        console.log('Connected Client')
-    });
-</script>
+<script src="app.js"></script>
 </body>
 </html>

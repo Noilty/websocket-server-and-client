@@ -1,7 +1,8 @@
 {
-  "name": "websocket-server-and-client",
+  "name": "websocket-server",
   "version": "0.0.1",
   "main": "websocket.js",
+  "type":"module",
   "scripts": {
     "start-wss": "node ./websocket.js"
   },

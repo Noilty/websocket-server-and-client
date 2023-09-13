@@ -3,26 +3,31 @@
 const PORT = 8080;
 const HOST = 'websocket';
 
-const express = require('express');
+// Server --------------------------------------------------------------------------------------------------------------
+
+import express from "express";
+import http from "http";
+import {Server} from "socket.io";
 
 const app = express();
-const server = require('http').Server(app);
-const wss = require('socket.io')(server, {
-    cors: {
-        origin: "http://localhost",
-        allowedHeaders: ["Access-Control-Allow-Origin"],
-        credentials: true
-    }
+const server = http.Server(app);
+const wss = new Server(server, {
+    cors: {origin: "http://localhost", allowedHeaders: ["Access-Control-Allow-Origin"], credentials: true}
 });
 
 server.listen(PORT, HOST, () => {
-    console.log(`[WEBSOCKET]:'SERVER STARTED'`);
+    console.info(`server started`);
 });
 
+// Websocket -----------------------------------------------------------------------------------------------------------
+
 wss.on('connection', function (ws) {
-    const CLIENT = `[CLIENT]:'${ws.id}'`;
-    console.log(`[WEBSOCKET][CONNECTION]` + CLIENT);
+    console.log(`new client [${ws.id}] has connected`);
+    ws.on('server:ping', data => {
+        console.log(data);
+        ws.emit('client:pong', {payload: {message: 'hi, client!'}});
+    });
     ws.on('disconnect', socket => {
-        console.log(`[WEBSOCKET][DISCONNECT]` + CLIENT);
+        console.log(`client [${ws.id}] has disconnected`);
     });
 });
