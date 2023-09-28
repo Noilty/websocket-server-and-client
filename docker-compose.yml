@@ -9,10 +9,12 @@ services:
       dockerfile: nginx/nginx.docker
     volumes:
       - ./src/client:/var/www
+      - ./src/client/docker/nginx/ssl:/etc/nginx/ssl
     depends_on:
       - php-fpm
     ports:
       - "80:80"
+      - "443:443"
 
   php-fpm:
     build:
@@ -20,6 +22,7 @@ services:
       dockerfile: php/fpm.docker
     volumes:
       - ./src/client:/var/www
+      - ./src/client/docker/nginx/ssl:/etc/nginx/ssl
 
   php-cli:
     build:

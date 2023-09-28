@@ -7,19 +7,28 @@ const HOST = 'websocket';
 
 import express from "express";
 import http from "http";
+import cors from "cors";
 import {Server} from "socket.io";
 
 const app = express();
 const server = http.Server(app);
 const wss = new Server(server, {
-    cors: {origin: "http://localhost", allowedHeaders: ["Access-Control-Allow-Origin"], credentials: true}
+    cors: {
+        origins: ["http://localhost", "https://localhost"],
+        allowedHeaders: ["Access-Control-Allow-Origin"],
+        credentials: true
+    }
+});
+
+app.get('*', (req, res) => {
+    res.send('Hello, World!');
 });
 
 server.listen(PORT, HOST, () => {
     console.info(`server started`);
 });
 
-// Websocket -----------------------------------------------------------------------------------------------------------
+// websocket -----------------------------------------------------------------------------------------------------------
 
 wss.on('connection', function (ws) {
     console.log(`new client [${ws.id}] has connected`);
